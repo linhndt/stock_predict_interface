@@ -24,7 +24,7 @@ def main():
             # perform stock prediction
 
         else:
-            print("Wong choice. Please re-select.")
+            print("Wrong choice. Please re-select.")
 
         choice = int(input("Please select your choice: "))
 
