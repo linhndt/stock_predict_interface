@@ -497,7 +497,7 @@ def descriptive():
 				macd(stock_data)
 
 			elif select == 12:
-				gather_data()
+				stock_data = gather_data()
 				select = int(select)
 
 			elif select == 13:
