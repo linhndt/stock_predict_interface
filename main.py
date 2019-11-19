@@ -7,7 +7,7 @@ def main():
 
     print("Welcome to the Stock Analytics Interface.")
     print("Please read our menu")
-    print("1. Stock Analytics \n 2. Stock Prediction \n 3. Quit")
+    print("1. Stock Analytics \n2. Stock Prediction \n3. Quit")
 
     choice = int(input("Please select your choice: "))
 
