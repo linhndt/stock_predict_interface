@@ -1,27 +1,28 @@
-
 # import library
+from predictive import *
+from descriptive import *
+
 
 def main():
 
     print("Welcome to the Stock Analytics Interface.")
     print("Please read our menu")
-    print(" 1. Stock Query \n 2. Stock Analytics \n 3. Stock Prediction \n 4. Quit")
+    print("1. Stock Analytics \n 2. Stock Prediction \n 3. Quit")
 
     choice = int(input("Please select your choice: "))
 
-    while choice != 4:
+    while choice != 3:
 
         # Using the while loops allows the customer to quit from the choice.
-        # Continue the choice until customers choose 4. Quit.
+        # Continue the choice until customers choose 3. Quit.
 
         if choice == 1:
-            # perform stock query
+            # perform Stock Analytics:
+            descriptive()
 
         elif choice == 2:
-            # perform stock analytics
-
-        elif choice == 3:
-            # perform stock prediction
+            # perform Stock Prediction:
+            predictive()
 
         else:
             print("Wrong choice. Please re-select.")
@@ -29,6 +30,7 @@ def main():
         choice = int(input("Please select your choice: "))
 
     print("Thank you for using our product.")
+
 
 if __name__ == "__main__":
 

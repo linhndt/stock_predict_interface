@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_finance import candlestick_ohlc
 import matplotlib
 from sklearn import preprocessing
-
+from data_gathering import gather_data
 
 def count(df):
 	"""
@@ -212,7 +212,7 @@ def visualize_trendline(df, close_price_col_name="Close", linear_value_col_name=
 	"""
 
 	# Find a linear model that fits data
-	model_coff = np.polyfit(range(0, len(df.index)), df[close_price_col_name].values.flatten(), 1)
+	model_coff = np.polyfit(range(len(df.index)), df[close_price_col_name].values.flatten(), 1)
 
 	linear_value_list = []
 
@@ -380,52 +380,136 @@ def wma(df, close_price_col_name="Close", wma_col_name="WMA"):
 	del df[wma_col_name]  # delete the WMA column for re-graphing
 
 
-def macd(x):
-	x['sema'] = x[' Close'].ewm(span = 12).mean()
-	x['lema'] = x[' Close'].ewm(span = 26).mean()
-	x['dif'] = x['sema'] - x['lema']
-	x['dea'] = x['dif'].ewm(span = 9).mean()
-	x['macd'] = 2*(x['dif']-x['dea'])
-	plt.plot(x.index, x['dif'], color = 'indianred', label = 'dif')
-	plt.plot(x.index, x['dea'], color = 'olivedrab', label = 'dea')
-	plt.fill_between(x.index, x['macd'], alpha = 0.6, facecolor = 'steelblue')
-	plt.xlabel('Date',fontsize = 'small',color = 'dimgray',fontweight = 'bold')
-	plt.ylabel('MACD',fontsize = 'small',fontweight = 'bold',color = 'dimgray')
-	plt.legend()
-	plt.title('Moving Average Convergence/Divergence 12/26/9',color = 'dimgray',fontweight = 'bold')
+def macd(df, close_price_col_name="Close"):
+	"""
+	Visualize Moving Average Convergence/Divergence (MACD) for stock data from a data frame.
+
+	Parameters:
+	--------------
+	df: data frame (M, N)
+		Initial data frame
+
+	close_price_col_name: string, default "Close"
+		Name of column from df which contains time serie format (ie: Closing price)
+	"""
+	# Add column to store value of MACD
+	df['Dif'] = df[close_price_col_name].ewm(span=12).mean() - df[close_price_col_name].ewm(span=26).mean()
+
+	# Plot
+	plt.plot(df[close_price_col_name], label="Closing price")
+	plt.plot(df["Dif"], label="Moving Average Convergence/Divergence (MACD)")
+	plt.title("Visualization of Moving Average Convergence/Divergence")
+	plt.xlabel("Date")
+	plt.ylabel("Closing price")
+	plt.legend(loc='upper left')
 	plt.show()
-	#x.fillna(0,inplace = True)
-print('1. Count\n2. Mean\n3. Quantiles\n4. Max, Min and Range\n5. Standard Variation and Standard Deviation\n6. Coefficient of Variation\n7. Normalized Price Values\
-	\n8. Raw Time-Series and Linear Trend Lines\n9. Candlestick Chart\n10. Moving Averages(MA)\n11. Exponential Weighted Moving Averages(EWMA)\
-	\n12. Moving Average Convergence/Divergence(MACD)\n13. Choose Another Stock\n14. Quit')
-choice = input('Please choose the option(one at a time, such as 2): ')
-while choice != '14':
-	if choice == '1':
-		count(descriptive)
-	elif choice == '2':
-		mean(descriptive)
-	elif choice == '3':
-		quantiles(descriptive)
-	elif choice == '4':
-		range(descriptive)
-	elif choice == '5':
-		standard_variation(descriptive)
-	elif choice == '6':
-		coefficient_variation(descriptive)
-	elif choice == '7':
-		normalized_price_values(descriptive)
-	elif choice == '8':
-		timeseries_trendline(descriptive)
-	elif choice == '9':
-		candlestick(descriptive)
-	elif choice == '10':
-		ma(descriptive)
-	elif choice == '11':
-		ewma(descriptive)
-	elif choice == '12':
-		macd(descriptive)
-	else:
-		print('Choose another stock')
 
-	choice = input('Please choose the option(one at a time, such as 2): ')
+	del df["Dif"]  # delete the WMA column for re-graphing
 
+
+def descriptive():
+	# 0. Introduction
+
+	print("{:-^50}".format('Welcome to descriptive analysis'))
+
+	# 1. Data selection:
+	# Users have to choose the period for descriptive analysis.
+	stock_data = gather_data()
+
+	while not stock_data.empty:
+
+		# 2. Options Selection:
+		# Users have to choose the options they want to do:
+
+		choices = ["Count", "Mean", "Quantiles", "Max, Min and Range", "Standard Deviation and Variance", "Coefficient of Variation",
+				   "Normalized Price Values", "Linear Trend Lines", "Candlestick Chart", "Moving Averages(MA)", "Exponential Weighted Moving Averages(EWMA)",
+				   "Moving Average Convergence/Divergence(MACD)", "Choose Another Stock", "Quit"]
+
+		select = -1
+
+		while select != 13:
+
+			print('/' + '{:-^40}'.format('Lists of choices') + '\\')
+
+			for i, item in enumerate(choices):
+				print_choice = '    {}. {}'.format(i, item)
+				print('|' + '{:<40}'.format(print_choice) + "|")
+			print('\\' + '-' * 40 + '/')
+
+			# Select your choice
+
+			while True:
+				try:
+					select = input('Select your choice from the above lists (only number) :')
+					break
+				except ValueError:
+					print('{:*^30}'.format('WARNING'))
+					print("Wrong input!! Please fill the number")
+					continue
+			select = int(select)
+
+			if select == 0:
+				# 2.0. Count number of days in period
+				print(count(stock_data))
+
+			elif select == 1:
+				# 2.1. Calculate mean of data each column
+				print(mean(stock_data))
+
+			elif select == 2:
+				# 2.2. Calculate quantile of data each column
+				print(quantile(stock_data))
+
+			elif select == 3:
+				# 2.3. Calculate Max, Min, Range (Max - min) values of data each column
+				print(range(stock_data))
+
+			elif select == 4:
+				# 2.4. Calculate Standard Deviation and Variance of data each column
+				print(standard_variation(stock_data))
+
+			elif select == 5:
+				# 2.5. Calculate Coefficient of variation of data each column
+				print(coeff_variation(stock_data))
+
+			elif select == 6:
+				# 2.6. Normalize stock prices
+				print(normalize_price_values(stock_data))
+
+			elif select == 7:
+				# 2.7. Visualize linear trend lines
+				visualize_trendline(stock_data)
+
+			elif select == 8:
+				# 2.8. Visualize candlestick chart
+				candelstick(stock_data)
+
+			elif select == 9:
+				# 2.9. Visualize Moving Average
+				ma(stock_data)
+
+			elif select == 10:
+				# 2.10. Visualize Exponential Weighted Moving Average
+				wma(stock_data)
+
+			elif select == 11:
+				# 2.11. Visualize MACD
+				macd(stock_data)
+
+			elif select == 12:
+				gather_data()
+				select = int(select)
+
+			elif select == 13:
+
+				print("{:-^40}".format('Goodbye'))
+
+			else:
+				print("***Wrong choice***")
+
+	print("There is no information on time given")
+
+
+if __name__ == "__main__":
+
+	descriptive()

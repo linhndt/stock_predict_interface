@@ -1,5 +1,5 @@
 import pandas as pd
-from data_gathering import gather_data
+from Linh.data_gathering import gather_data
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
