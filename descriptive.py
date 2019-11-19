@@ -6,6 +6,7 @@ import matplotlib
 from sklearn import preprocessing
 from data_gathering import gather_data
 
+
 def count(df):
 	"""
 	Count the number of rows in a data frame
@@ -211,12 +212,15 @@ def visualize_trendline(df, close_price_col_name="Close", linear_value_col_name=
 		Name of column added to df which contains linear values from Linear Regression model.
 	"""
 
+	# Covert date format into integer date format
+	int_date_list = [matplotlib.dates.date2num(date) for date in df.index]
+
 	# Find a linear model that fits data
-	model_coff = np.polyfit(range(len(df.index)), df[close_price_col_name].values.flatten(), 1)
+	model_coff = np.polyfit(int_date_list, df[close_price_col_name].values.flatten(), 1)
 
 	linear_value_list = []
 
-	for x in range(len(df[close_price_col_name])):
+	for x in int_date_list:
 		y = model_coff[0] * x + model_coff[1]  # y = a * x + b
 		linear_value_list.append(y)
 
@@ -227,12 +231,13 @@ def visualize_trendline(df, close_price_col_name="Close", linear_value_col_name=
 
 	# Plot
 	plt.plot(df[close_price_col_name], label="Closing price")
-	plt.plot(df[linear_value_col_name], label="Linear trend")
+	plt.plot(df[linear_value_col_name], label="Linear Trend")
 	plt.title("Visualization of Linear Trend Line")
 	plt.xlabel("Date")
 	plt.ylabel("Closing price")
 	plt.legend(loc='upper left')
 	plt.show()
+	del df[linear_value_col_name]
 
 
 def candelstick(df, int_date_col_name="Int Date", volume_col_name="Volume"):
@@ -503,7 +508,7 @@ def descriptive():
 			elif select == 13:
 
 				print("{:-^40}".format('Goodbye'))
-
+				break
 			else:
 				print("***Wrong choice***")
 

@@ -253,11 +253,11 @@ def predictive():
         # 3. Options Selection:
         # Users have to choose the options they want to do: Graph, Model Errors, Prediction, Quit.
 
-        choices = ['Graph', 'Prediction errors', 'Forcasting', 'Quit']
+        choices = ['Graph', 'Prediction errors', 'Forcasting', 'Change Stock', 'Quit']
 
         select = -1
 
-        while select != 3:
+        while select != 4:
 
             print('/' + '{:-^40}'.format('Lists of choices') + '\\')
 
@@ -336,6 +336,10 @@ def predictive():
                 input('Press \'Enter\' if you want to continue: ')
 
             elif select == 3:
+                stock_data = gather_data()
+                select = int(select)
+
+            elif select == 4:
 
                 print("{:-^40}".format('Goodbye'))
 
