@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_finance import candlestick_ohlc
 import matplotlib
 from sklearn import preprocessing
-from Linh.data_gathering import gather_data
+from data_gathering import gather_data
 
 def count(df):
 	"""
