@@ -7,7 +7,6 @@ def get_comp_list():
     """
     Get the list of companies' symbols from Nasdaq url resource.
    "https://old.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchange=nasdaq&render=download"
-
     Return:
     ----------------
     comp_symbol: a list of companies' symbol
@@ -22,12 +21,10 @@ def get_comp_list():
 def remove_initial_space(df):
     """
     Remove the initial space of headings in a data frame
-
     Parameters:
     ----------------
     df: data frame
         A data frame whose each heading contains an initial space.
-
     Returns:
     ----------------
     df: data frame
@@ -52,12 +49,10 @@ def gather_data():
     symbol_input: company symbol
     start_date: start date of the query period (format: MM/DD/YYYY)
     end_date: end date of the query period (format: MM/DD/YYYY)
-
     These information will be concatenated with Wall Street Journal API to create the url to download data.
     The url template is :
     "https://quotes.wsj.com/" + symbol_input + "/historical-prices/download?MOD_VIEW=page&" \
     "num_rows=6299&range_days=6299&startDate=" + start_date + "&endDate=" + end_date
-
     Returns:
     ----------------
     stock_data: data frame

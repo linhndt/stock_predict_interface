@@ -3,18 +3,17 @@ from data_gathering import gather_data
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-
+from pandas.tseries.holiday import USFederalHolidayCalendar
+from datetime import timedelta
 
 def select_variable(df):
     """
     Select variable that users want to play with from the list of headings of the data frame.
     Returns an array contains the value of chosen variable and the name of chosen variable
-
     Parameters:
     --------------
     df: data frame
         Initial data frame
-
     Returns
     --------------
     variable_array: ndarray
@@ -53,17 +52,14 @@ def convert_int_date(df):
     """
     Convert date value each row into an integer value, store them in an array.
     Returns an integer date array.
-
     Parameters:
     --------------
     df: data frame
         Initial data frame
-
     Returns
     --------------
     int_date_array: ndarray
         An array contains value of integer dates
-
     """
     # Convert each date value in Date column into an integer value, store them in a list
     int_date_list = [matplotlib.dates.date2num(date) for date in df.index]
@@ -78,16 +74,13 @@ def find_model_coff(x, y):
     """
     Fit a polynomial p(x) = p[0] * x**deg + ... + p[deg] of degree deg to points (x, y).
     Returns a vector of coefficients p that minimises the squared error in the order deg, deg-1, … 0.
-
     * Note: users need to input a degree of the model.
-
     Parameters:
     --------------
     x : array_like, shape (M,)
         x-coordinates of the M sample points (x[i], y[i]).
     y : array_like, shape (M,)
         y-coordinates of the sample points.
-
     Returns:
     --------------
     model_coff : ndarray, shape (deg + 1,) or (deg + 1, K)
@@ -112,7 +105,6 @@ def find_model_coff(x, y):
 def model_predict(x, model_coff):
     """
     Return prediction value of f(x), with f(x) is polynomial model with model_coff cofficients.
-
     Parameters:
     --------------
     x : array_like, shape (1, 1) or (M,)
@@ -137,7 +129,6 @@ def cal_MSE(y, y_hat):
     """
     Calculate mean square error(MSE) of training model
     https://en.wikipedia.org/wiki/Mean_squared_error
-
     Parameters:
     --------------
     y: array_like, shape (M,)
@@ -160,7 +151,6 @@ def cal_r_square(y, y_hat):
     """
     Calculate R-square(R^2) of training model
     https://en.wikipedia.org/wiki/Coefficient_of_determination
-
     Parameters:
     --------------
     y: array_like, shape (M,)
@@ -191,7 +181,6 @@ def cal_r_square(y, y_hat):
 def visualize_training_model(df, selected_col, y_hat, pred_col_name="Predict"):
     """
     Visualize training model
-
     Parameters:
     --------------
     df: data frame
@@ -205,9 +194,43 @@ def visualize_training_model(df, selected_col, y_hat, pred_col_name="Predict"):
     """
 
     df.insert(len(df.columns), pred_col_name, y_hat, True)
-    df[selected_col].plot(marker=".", linestyle="None")
-    df[pred_col_name].plot()
+    plt.plot(df[selected_col], marker=".", linestyle="None", label="Closing price")
+    plt.plot(df[pred_col_name], color='red', label="Regression line")
+    plt.title("Visualize the training model")
+    plt.xlabel("Date")
+    plt.ylabel("Closing price")
+    plt.legend("upper left")
     plt.show()
+
+    del df[pred_col_name]  # delete the column for re-graphing
+
+
+def visualize_predict_value(df, selected_col, y_hat, predict_date, predicted_value, pred_col_name="Predict"):
+    """
+    Visualize training model
+    Parameters:
+    --------------
+    df: data frame
+        An initial data frame
+    selected_col: string
+        Name of the column of df to visualize
+    y_hat: array_like
+        An array of predicted values based on training model
+    pre_col_name: string, default "Predict"
+        Name of the column storing value of y_hat
+    """
+
+    df.insert(len(df.columns), pred_col_name, y_hat, True)
+    plt.plot(df[selected_col], marker=".", color="green", linestyle="None", label="Closing price")
+    plt.plot(df[pred_col_name], color='red', label="Regression line")
+    plt.plot(predict_date, predicted_value, color="blue", marker="o", label="Predict point")
+    plt.title("Visualize regression model with predicted value")
+    plt.xlabel("Date")
+    plt.ylabel("Closing price")
+    plt.legend("upper left")
+    plt.show()
+
+    del df[pred_col_name]  # delete the column for re-graphing
 
 
 def predictive():
@@ -219,130 +242,196 @@ def predictive():
     # 1. Data selection:
     # Users have to choose the training period for predictive analysis.
     stock_data = gather_data()
+    while stock_data.empty:
+        print("There is no information on time given")
+        stock_data = gather_data()
 
     # 2. Variable Selection:
     # Users have to choose the variable they want to play with.
-    while not stock_data.empty:
 
-        while True:
+    while True:
 
-            try:
-                [y, selected_variable] = select_variable(stock_data)
-                break
+        try:
+            [y, selected_variable] = select_variable(stock_data)
+            break
 
-            except ValueError:
-                print('{:*^30}'.format('WARNING'))
-                print("Wrong input!! Please fill the number")
-                continue
+        except ValueError:
+            print('{:*^30}'.format('WARNING'))
+            print("Wrong input!! Please fill the number")
+            continue
 
-        # Build model
+    # Build model
 
-        int_date_array = convert_int_date(stock_data)
+    int_date_array = convert_int_date(stock_data)
 
-        while True:
-            try:
-                model_coff = find_model_coff(int_date_array, stock_data[selected_variable])
-                break
-            except ValueError:
-                print('{:*^30}'.format('WARNING'))
-                print("Wrong input!! Please fill the number")
-                continue
+    while True:
+        try:
+            model_coff = find_model_coff(int_date_array, stock_data[selected_variable])
+            break
+        except ValueError:
+            print('{:*^30}'.format('WARNING'))
+            print("Wrong input!! Please fill the number")
+            continue
 
-        y_hat = model_predict(int_date_array, model_coff)
+    y_hat = model_predict(int_date_array, model_coff)
 
-        # 3. Options Selection:
-        # Users have to choose the options they want to do: Graph, Model Errors, Prediction, Quit.
+    # 3. Options Selection:
+    # Users have to choose the options they want to do: Graph, Model Errors, Prediction, Quit.
 
-        choices = ['Graph', 'Prediction errors', 'Forcasting', 'Quit']
+    choices = ['Graph', 'Prediction errors', 'Forecasting', 'Change Stock', 'Quit']
 
-        select = -1
+    select = ''
 
-        while select != 3:
+    while select != '4':
 
-            print('/' + '{:-^40}'.format('Lists of choices') + '\\')
+        print('/' + '{:-^40}'.format('Lists of choices') + '\\')
 
-            for i, item in enumerate(choices):
-                print_choice = '    {}. {}'.format(i, item)
-                print('|' + '{:<40}'.format(print_choice) + "|")
-            print('\\' + '-' * 40 + '/')
+        for i, item in enumerate(choices):
+            print_choice = '    {}. {}'.format(i, item)
+            print('|' + '{:<40}'.format(print_choice) + "|")
+        print('\\' + '-' * 40 + '/')
 
-            # Select your choice
+        select = input('Select your choice from the above lists (only number) :').strip()
+
+        # Select your choice
+
+        if select == '0':
+
+            # 3.1. Visualisation
+
+            visualize_training_model(stock_data, selected_variable, y_hat)
+
+        elif select == '1':
+
+            # 3.2. Calculate R^2 and RMSE
+
+            # Solve model:
+
+            # MSE = 1/n sum(from i=1 to n) (y(i)- y_hat(i))^2
+            MSE = cal_MSE(y, y_hat)
+
+            # RMSE = sqrt(MSE)
+            RMSE = MSE ** (1 / 2)
+
+            # R_Square = 1 - (SSE/TSS)
+            R_Square = cal_r_square(y, y_hat)
+
+            # Display
+            print('/' + '{:-^30}'.format('Prediction errors') + '\\')
+            print('|' + ' MSE  : {:<22}'.format(round(MSE, 3)) + '|')
+            print('|' + ' RMSE : {:<22}'.format(round(RMSE, 3)) + '|')
+            print('|' + ' R^2  : {:<22}'.format(round(R_Square, 3)) + '|')
+            print('\\' + '-' * 30 + '/')
+
+            input('Press \'Enter\' if you want to continue: ')
+            del MSE, RMSE, R_Square  # del variable to save data storage
+
+        elif select == '2':
+
+            # 3.3 Forecast
+            # 3.3.1 select date that you want to forecast
 
             while True:
                 try:
-                    select = input('Select your choice from the above lists (only number) :')
+                    forecast_date = input('Please specify a date that you want to forecast ("MM/DD/YYYY"): ')
+                    forecast_date = pd.to_datetime(forecast_date, format="%m/%d/%Y")
                     break
                 except ValueError:
                     print('{:*^30}'.format('WARNING'))
-                    print("Wrong input!! Please fill the number")
+                    print("Wrong Format!! Please fill the date in MM/DD/YYYY format")
                     continue
-            select = int(select)
 
-            if select == 0:
+            # Check whether the prediction date a holiday or weekend.
+            # The programme will select the last working from the date that users select
 
-                # 3.1. Visualisation
+            calendar = USFederalHolidayCalendar()
+            holiday = calendar.holidays(start=forecast_date, end=forecast_date)
+            if not holiday.empty or forecast_date.weekday() >= 5:
+                print('***Notice***\nThe date that you want to predict is a holiday or weekend')
+                print('Our programme will choose the last working date')
+            while not holiday.empty or forecast_date.weekday() >= 5:    # check if the date is a holiday or weekend
+                forecast_date = forecast_date - timedelta(1)    # move 1 day backward
+                holiday = calendar.holidays(start=forecast_date, end=forecast_date)
+            print('The forecast date is changed to {}'.format(forecast_date.strftime('%m/%d/%Y')))
 
-                visualize_training_model(stock_data, selected_variable, y_hat)
+            forecast_date_num = matplotlib.dates.date2num(forecast_date)
 
-            elif select == 1:
+            # 3.3.2 Forcasting
 
-                # 3.2. Calculate R^2 and RMSE
+            y_forecast = model_predict(forecast_date_num, model_coff)
 
-                # Solve model:
+            # 3.3.3 Options with forecasting: print out predict value, visualize, change
 
-                # MSE = 1/n sum(from i=1 to n) (y(i)- y_hat(i))^2
-                MSE = cal_MSE(y, y_hat)
+            forcast_choice = ["Print predict value", "Visualize predict value and training model", "Change date", "Quit"]
 
-                # RMSE = sqrt(MSE)
-                RMSE = MSE ** (1 / 2)
+            forecast_select = ''
 
-                # R_Square = 1 - (SSE/TSS)
-                R_Square = cal_r_square(y, y_hat)
+            while forecast_select != '3':
 
-                # Display
-                print('/' + '{:-^30}'.format('Prediction errors') + '\\')
-                print('|' + ' MSE  : {:<22}'.format(round(MSE, 3)) + '|')
-                print('|' + ' RMSE : {:<22}'.format(round(RMSE, 3)) + '|')
-                print('|' + ' R^2  : {:<22}'.format(round(R_Square, 3)) + '|')
-                print('\\' + '-' * 30 + '/')
+                print('/' + '{:-^60}'.format('Lists of choices') + '\\')
 
-                input('Press \'Enter\' if you want to continue: ')
-                del MSE, RMSE, R_Square  # del variable to save data storage
+                for i, item in enumerate(forcast_choice):
+                    print_choice = '    {}. {}'.format(i, item)
+                    print('|' + '{:<60}'.format(print_choice) + "|")
+                print('\\' + '-' * 60 + '/')
 
-            elif select == 2:
+                forecast_select = input('Select your choice from the above lists (only number) :').strip()
 
-                # 3.3 Forecast
-                # 3.3.1 select date that you want to forecast
+                if forecast_select == "0":
+                    y_forecast = model_predict(forecast_date_num, model_coff)
+                    print("The forecast value is {:0.2f}.".format(y_forecast))
 
-                while True:
-                    try:
-                        forecast_date = input('Please specify a date that you want to forecast ("MM/DD/YYYY"): ')
-                        forecast_date = pd.to_datetime(forecast_date, format="%m/%d/%Y")
-                        break
-                    except ValueError:
-                        print('{:*^30}'.format('WARNING'))
-                        print("Wrong Format!! Please fill the date in MM/DD/YYYY format")
-                        continue
+                elif forecast_select == "1":
+                    visualize_predict_value(stock_data, selected_variable, y_hat, forecast_date_num, y_forecast)
 
-                forecast_date_num = matplotlib.dates.date2num(forecast_date)
+                elif forecast_select == "2":
 
-                # 3.3.2 Forcasting
+                    while True:
+                        try:
+                            forecast_date = input('Please specify a date that you want to forecast ("MM/DD/YYYY"): ')
+                            forecast_date = pd.to_datetime(forecast_date, format="%m/%d/%Y")
+                            break
+                        except ValueError:
+                            print('{:*^30}'.format('WARNING'))
+                            print("Wrong Format!! Please fill the date in MM/DD/YYYY format")
+                            continue
 
-                y_forecast = model_predict(forecast_date_num, model_coff)
+                    # Check whether the prediction date a holiday or weekend.
+                    # The programme will select the last working from the date that users select
 
-                # 3.3.3 Display
+                    calendar = USFederalHolidayCalendar()
+                    holiday = calendar.holidays(start=forecast_date, end=forecast_date)
+                    if not holiday.empty or forecast_date.weekday() >= 5:
+                        print('***Notice***\nThe date that you want to predict is a holiday or weekend')
+                        print('Our programme will choose the last working date')
+                    while not holiday.empty or forecast_date.weekday() >= 5:  # check if the date is a holiday or weekend
+                        forecast_date = forecast_date - timedelta(1)  # move 1 day backward
+                        holiday = calendar.holidays(start=forecast_date, end=forecast_date)
+                    print('The forecast date is changed to {}'.format(forecast_date.strftime('%m/%d/%Y')))
 
-                print("The forecast value is {:0.2f}.".format(y_forecast))
-                input('Press \'Enter\' if you want to continue: ')
+                    forecast_date_num = matplotlib.dates.date2num(forecast_date)
 
-            elif select == 3:
+                elif forecast_select == '3':
 
-                print("{:-^40}".format('Goodbye'))
+                    print("{:-^40}".format('Goodbye'))
 
-            else:
-                print("***Wrong choice***")
+                else:
+                    print("***Wrong choice***")
 
-    print("There is no information on time given")
+            input('Press \'Enter\' if you want to continue: ')
+
+        elif select == '3':
+            stock_data = gather_data()
+            while stock_data.empty:
+                print("There is no information on time given")
+                stock_data = gather_data()
+
+        elif select == '4':
+
+            print("{:-^40}".format('Goodbye'))
+
+        else:
+            print("***Wrong choice***")
 
 
 if __name__ == '__main__':
