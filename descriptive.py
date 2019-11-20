@@ -395,8 +395,9 @@ def descriptive():
 
 	stock_data = gather_data()
 	while stock_data.empty:
+		print("There is no information on time given")
 		stock_data = gather_data()
-	print("There is no information on time given")
+
 
 	# 2. Options Selection:
 	# Users have to choose the options they want to do:
