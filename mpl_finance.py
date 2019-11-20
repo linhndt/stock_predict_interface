@@ -1,7 +1,6 @@
 """
 A collection of functions for analyzing and plotting
 financial data.   User contributions welcome!
-
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
@@ -19,13 +18,9 @@ from six.moves import xrange, zip
 def plot_day_summary_oclh(ax, quotes, ticksize=3,
                           colorup='k', colordown='r'):
     """Plots day summary
-
         Represent the time, open, close, high, low as a vertical line
         ranging from low to high.  The left tick is the open and the right
         tick is the close.
-
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -38,7 +33,6 @@ def plot_day_summary_oclh(ax, quotes, ticksize=3,
         the color of the lines where close >= open
     colordown : color
         the color of the lines where close <  open
-
     Returns
     -------
     lines : list
@@ -52,13 +46,9 @@ def plot_day_summary_oclh(ax, quotes, ticksize=3,
 def plot_day_summary_ohlc(ax, quotes, ticksize=3,
                           colorup='k', colordown='r'):
     """Plots day summary
-
         Represent the time, open, high, low, close as a vertical line
         ranging from low to high.  The left tick is the open and the right
         tick is the close.
-
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -71,7 +61,6 @@ def plot_day_summary_ohlc(ax, quotes, ticksize=3,
         the color of the lines where close >= open
     colordown : color
         the color of the lines where close <  open
-
     Returns
     -------
     lines : list
@@ -86,14 +75,9 @@ def _plot_day_summary(ax, quotes, ticksize=3,
                       colorup='k', colordown='r',
                       ochl=True):
     """Plots day summary
-
-
         Represent the time, open, high, low, close as a vertical line
         ranging from low to high.  The left tick is the open and the right
         tick is the close.
-
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -111,7 +95,6 @@ def _plot_day_summary(ax, quotes, ticksize=3,
         the color of the lines where close <  open
     ochl: bool
         argument to select between ochl and ohlc ordering of quotes
-
     Returns
     -------
     lines : list
@@ -165,7 +148,6 @@ def candlestick_ochl(ax, quotes, width=0.2, colorup='k', colordown='r',
     from low to high.  Use a rectangular bar to represent the
     open-close span.  If close >= open, use colorup to color the bar,
     otherwise use colordown
-
     Parameters
     ----------
     ax : `Axes`
@@ -173,9 +155,7 @@ def candlestick_ochl(ax, quotes, width=0.2, colorup='k', colordown='r',
     quotes : sequence of (time, open, close, high, low, ...) sequences
         As long as the first 5 elements are these values,
         the record can be as long as you want (e.g., it may store volume).
-
         time must be in float days format - see date2num
-
     width : float
         fraction of a day for the rectangle width
     colorup : color
@@ -184,13 +164,11 @@ def candlestick_ochl(ax, quotes, width=0.2, colorup='k', colordown='r',
          the color of the rectangle where close <  open
     alpha : float
         the rectangle alpha level
-
     Returns
     -------
     ret : tuple
         returns (lines, patches) where lines is a list of lines
         added and patches is a list of the rectangle patches added
-
     """
     return _candlestick(ax, quotes, width=width, colorup=colorup,
                         colordown=colordown,
@@ -204,7 +182,6 @@ def candlestick_ohlc(ax, quotes, width=0.2, colorup='k', colordown='r',
     from low to high.  Use a rectangular bar to represent the
     open-close span.  If close >= open, use colorup to color the bar,
     otherwise use colordown
-
     Parameters
     ----------
     ax : `Axes`
@@ -212,9 +189,7 @@ def candlestick_ohlc(ax, quotes, width=0.2, colorup='k', colordown='r',
     quotes : sequence of (time, open, high, low, close, ...) sequences
         As long as the first 5 elements are these values,
         the record can be as long as you want (e.g., it may store volume).
-
         time must be in float days format - see date2num
-
     width : float
         fraction of a day for the rectangle width
     colorup : color
@@ -223,13 +198,11 @@ def candlestick_ohlc(ax, quotes, width=0.2, colorup='k', colordown='r',
          the color of the rectangle where close <  open
     alpha : float
         the rectangle alpha level
-
     Returns
     -------
     ret : tuple
         returns (lines, patches) where lines is a list of lines
         added and patches is a list of the rectangle patches added
-
     """
     return _candlestick(ax, quotes, width=width, colorup=colorup,
                         colordown=colordown,
@@ -243,7 +216,6 @@ def _candlestick(ax, quotes, width=0.2, colorup='k', colordown='r',
     from low to high.  Use a rectangular bar to represent the
     open-close span.  If close >= open, use colorup to color the bar,
     otherwise use colordown
-
     Parameters
     ----------
     ax : `Axes`
@@ -263,13 +235,11 @@ def _candlestick(ax, quotes, width=0.2, colorup='k', colordown='r',
         the rectangle alpha level
     ochl: bool
         argument to select between ochl and ohlc ordering of quotes
-
     Returns
     -------
     ret : tuple
         returns (lines, patches) where lines is a list of lines
         added and patches is a list of the rectangle patches added
-
     """
 
     OFFSET = width / 2.0
@@ -320,7 +290,6 @@ def _check_input(opens, closes, highs, lows, miss=-1):
     """Checks that *opens*, *highs*, *lows* and *closes* have the same length.
     NOTE: this code assumes if any value open, high, low, close is
     missing (*-1*) they all are missing
-
     Parameters
     ----------
     ax : `Axes`
@@ -335,7 +304,6 @@ def _check_input(opens, closes, highs, lows, miss=-1):
         sequence of closing values
     miss : int
         identifier of the missing data
-
     Raises
     ------
     ValueError
@@ -345,14 +313,12 @@ def _check_input(opens, closes, highs, lows, miss=-1):
     def _missing(sequence, miss=-1):
         """Returns the index in *sequence* of the missing data, identified by
         *miss*
-
         Parameters
         ----------
         sequence :
             sequence to evaluate
         miss :
             identifier of the missing data
-
         Returns
         -------
         where_miss: numpy.ndarray
@@ -378,7 +344,6 @@ def plot_day_summary2_ochl(ax, opens, closes, highs, lows, ticksize=4,
     """Represent the time, open, close, high, low,  as a vertical line
     ranging from low to high.  The left tick is the open and the right
     tick is the close.
-
     Parameters
     ----------
     ax : `Axes`
@@ -397,7 +362,6 @@ def plot_day_summary2_ochl(ax, opens, closes, highs, lows, ticksize=4,
         the color of the lines where close >= open
     colordown : color
          the color of the lines where close <  open
-
     Returns
     -------
     ret : list
@@ -416,7 +380,6 @@ def plot_day_summary2_ohlc(ax, opens, highs, lows, closes, ticksize=4,
     *opens*, *highs*, *lows* and *closes* must have the same length.
     NOTE: this code assumes if any value open, high, low, close is
     missing (*-1*) they all are missing
-
     Parameters
     ----------
     ax : `Axes`
@@ -435,7 +398,6 @@ def plot_day_summary2_ohlc(ax, opens, highs, lows, closes, ticksize=4,
         the color of the lines where close >= open
     colordown : color
          the color of the lines where close <  open
-
     Returns
     -------
     ret : list
@@ -516,10 +478,7 @@ def candlestick2_ochl(ax, opens, closes, highs, lows, width=4,
                       alpha=0.75):
     """Represent the open, close as a bar line and high low range as a
     vertical line.
-
     Preserves the original argument order.
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -540,7 +499,6 @@ def candlestick2_ochl(ax, opens, closes, highs, lows, width=4,
         the color of the lines where close <  open
     alpha : float
         bar transparency
-
     Returns
     -------
     ret : tuple
@@ -557,11 +515,8 @@ def candlestick2_ohlc(ax, opens, highs, lows, closes, width=4,
                       alpha=0.75):
     """Represent the open, close as a bar line and high low range as a
     vertical line.
-
     NOTE: this code assumes if any value open, low, high, close is
     missing they all are missing
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -582,7 +537,6 @@ def candlestick2_ohlc(ax, opens, highs, lows, closes, width=4,
         the color of the lines where close <  open
     alpha : float
         bar transparency
-
     Returns
     -------
     ret : tuple
@@ -645,7 +599,6 @@ def volume_overlay(ax, opens, closes, volumes,
     """Add a volume overlay to the current axes.  The opens and closes
     are used to determine the color of the bar.  -1 is missing.  If a
     value is missing on one it must be missing on all
-
     Parameters
     ----------
     ax : `Axes`
@@ -664,12 +617,10 @@ def volume_overlay(ax, opens, closes, volumes,
         the color of the lines where close <  open
     alpha : float
         bar transparency
-
     Returns
     -------
     ret : `barCollection`
         The `barrCollection` added to the axes
-
     """
 
     colorup = mcolors.to_rgba(colorup, alpha)
@@ -707,11 +658,8 @@ def volume_overlay2(ax, closes, volumes,
     Add a volume overlay to the current axes.  The closes are used to
     determine the color of the bar.  -1 is missing.  If a value is
     missing on one it must be missing on all
-
     nb: first point is not displayed - it is used only for choosing the
     right color
-
-
     Parameters
     ----------
     ax : `Axes`
@@ -728,12 +676,10 @@ def volume_overlay2(ax, closes, volumes,
         the color of the lines where close <  open
     alpha : float
         bar transparency
-
     Returns
     -------
     ret : `barCollection`
         The `barrCollection` added to the axes
-
     """
 
     return volume_overlay(ax, closes[:-1], closes[1:], volumes[1:],
@@ -746,7 +692,6 @@ def volume_overlay3(ax, quotes,
     """Add a volume overlay to the current axes.  quotes is a list of (d,
     open, high, low, close, volume) and close-open is used to
     determine the color of the bar
-
     Parameters
     ----------
     ax : `Axes`
@@ -761,13 +706,10 @@ def volume_overlay3(ax, quotes,
         the color of the lines where close1 <  close0
     alpha : float
          bar transparency
-
     Returns
     -------
     ret : `barCollection`
         The `barrCollection` added to the axes
-
-
     """
 
     colorup = mcolors.to_rgba(colorup, alpha)
@@ -824,7 +766,6 @@ def index_bar(ax, vals,
               facecolor='b', edgecolor='l',
               width=4, alpha=1.0, ):
     """Add a bar collection graph with height vals (-1 is missing).
-
     Parameters
     ----------
     ax : `Axes`
@@ -839,12 +780,10 @@ def index_bar(ax, vals,
         the bar width in points
     alpha : float
        bar transparency
-
     Returns
     -------
     ret : `barCollection`
         The `barrCollection` added to the axes
-
     """
 
     facecolors = (mcolors.to_rgba(facecolor, alpha),)

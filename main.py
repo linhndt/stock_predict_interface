@@ -1,13 +1,12 @@
 # import library
-from predictive import *
-from descriptive import *
+import predictive as pre
+import descriptive as des
 
 
 def main():
 
-    print("Welcome to the Stock Analytics Interface.")
-    print("Please read our menu")
-    print("1. Stock Analytics \n 2. Stock Prediction \n 3. Quit")
+    print("Welcome to the Stock Analytics Interface.\nPlease read our menu")
+    print("1. Stock Analytics \n2. Stock Prediction \n3. Quit")
 
     choice = int(input("Please select your choice: "))
 
@@ -18,15 +17,17 @@ def main():
 
         if choice == 1:
             # perform Stock Analytics:
-            descriptive()
+            des.descriptive()
 
         elif choice == 2:
             # perform Stock Prediction:
-            predictive()
+            pre.predictive()
 
         else:
             print("Wrong choice. Please re-select.")
 
+        print("Welcome to the Stock Analytics Interface.\nPlease read our menu")
+        print("1. Stock Analytics \n2. Stock Prediction \n3. Quit")
         choice = int(input("Please select your choice: "))
 
     print("Thank you for using our product.")

@@ -11,12 +11,10 @@ def count(df):
 	"""
 	Count the number of rows in a data frame
 	Return the data frame counting number of values each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_count : data frame (1, N)
@@ -37,12 +35,10 @@ def mean(df):
 	"""
 	Calculate mean value of data in each column in a data frame
 	Return the data frame calculating the mean value of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_mean : data frame (1, N)
@@ -64,12 +60,10 @@ def quantile(df):
 	"""
 	Calculate quantile values (25%, 50%, 75%) of data in each column in a data frame
 	Return the data frame calculating the quantile values of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M,N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_quantile : data frame (3,N)
@@ -91,12 +85,10 @@ def range(df):
 	"""
 	Determine the maximum, minimum values and the range (max - min) value of data in each column in a data frame
 	Return the data frame storing the max, min values and the range (max - min) value of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M,N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_range : data frame (3,N)
@@ -118,12 +110,10 @@ def standard_variation(df):
 	"""
 	Calculate the standard deviation and variance of data in each column of a data frame
 	Return the data frame storing the standard deviation and variance of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M,N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_sdv : data frame (2,N)
@@ -145,12 +135,10 @@ def coeff_variation(df):
 	"""
 	Calculate the coefficient of variation of data in each column of a data frame
 	Return the data frame storing the coefficient of variation of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M,N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_coeff : data frame (1,N)
@@ -172,12 +160,10 @@ def normalize_price_values(df):
 	"""
 	Normalize the coefficient of variation of data in each column of a data frame
 	Return the data frame storing the coefficient of variation of data in each column of df
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	Return:
 	--------------
 	df_normalize : data frame (M, N)
@@ -199,15 +185,12 @@ def normalize_price_values(df):
 def visualize_trendline(df, close_price_col_name="Close", linear_value_col_name="Linear Value"):
 	"""
 	Visualize time series data from a data frame along with corresponding linear trend line.
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	close_price_col_name: string, default "Close"
 		Name of column from df which contains time serie format (ie: Closing price)
-
 	linear_value_col_name: string, default "Linear Value"
 		Name of column added to df which contains linear values from Linear Regression model.
 	"""
@@ -243,15 +226,12 @@ def visualize_trendline(df, close_price_col_name="Close", linear_value_col_name=
 def candelstick(df, int_date_col_name="Int Date", volume_col_name="Volume"):
 	"""
 	Visualize candlestick chart for stock data from a data frame.
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	int_date_col_name: string, default "Int Date"
 		Name of column in df which contains date values
-
 	volume_col_name: string, default "Volume"
 		Name of column in df which contains stock volume values
 	"""
@@ -284,15 +264,12 @@ def candelstick(df, int_date_col_name="Int Date", volume_col_name="Volume"):
 def ma(df, close_price_col_name="Close", ma_col_name="MA"):
 	"""
 	Visualize moving average for stock data from a data frame.
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	close_price_col_name: string, default "Close"
 		Name of column from df which contains time serie format (ie: Closing price)
-
 	ma_col_name: string, default "MA"
 		Name of column in df which contains MA values
 	"""
@@ -336,15 +313,12 @@ def ma(df, close_price_col_name="Close", ma_col_name="MA"):
 def wma(df, close_price_col_name="Close", wma_col_name="WMA"):
 	"""
 	Visualize weighted moving average for stock data from a data frame.
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	close_price_col_name: string, default "Close"
 		Name of column from df which contains time serie format (ie: Closing price)
-
 	wma_col_name: string, default "WMA"
 		Name of column in df which contains WMA values
 	"""
@@ -388,12 +362,10 @@ def wma(df, close_price_col_name="Close", wma_col_name="WMA"):
 def macd(df, close_price_col_name="Close"):
 	"""
 	Visualize Moving Average Convergence/Divergence (MACD) for stock data from a data frame.
-
 	Parameters:
 	--------------
 	df: data frame (M, N)
 		Initial data frame
-
 	close_price_col_name: string, default "Close"
 		Name of column from df which contains time serie format (ie: Closing price)
 	"""
@@ -413,106 +385,102 @@ def macd(df, close_price_col_name="Close"):
 
 
 def descriptive():
+
 	# 0. Introduction
 
 	print("{:-^50}".format('Welcome to descriptive analysis'))
 
 	# 1. Data selection:
 	# Users have to choose the period for descriptive analysis.
+
 	stock_data = gather_data()
-
-	while not stock_data.empty:
-
-		# 2. Options Selection:
-		# Users have to choose the options they want to do:
-
-		choices = ["Count", "Mean", "Quantiles", "Max, Min and Range", "Standard Deviation and Variance", "Coefficient of Variation",
-				   "Normalized Price Values", "Linear Trend Lines", "Candlestick Chart", "Moving Averages(MA)", "Exponential Weighted Moving Averages(EWMA)",
-				   "Moving Average Convergence/Divergence(MACD)", "Choose Another Stock", "Quit"]
-
-		select = -1
-
-		while select != 13:
-
-			print('/' + '{:-^40}'.format('Lists of choices') + '\\')
-
-			for i, item in enumerate(choices):
-				print_choice = '    {}. {}'.format(i, item)
-				print('|' + '{:<40}'.format(print_choice) + "|")
-			print('\\' + '-' * 40 + '/')
-
-			# Select your choice
-
-			while True:
-				try:
-					select = input('Select your choice from the above lists (only number) :')
-					break
-				except ValueError:
-					print('{:*^30}'.format('WARNING'))
-					print("Wrong input!! Please fill the number")
-					continue
-			select = int(select)
-
-			if select == 0:
-				# 2.0. Count number of days in period
-				print(count(stock_data))
-
-			elif select == 1:
-				# 2.1. Calculate mean of data each column
-				print(mean(stock_data))
-
-			elif select == 2:
-				# 2.2. Calculate quantile of data each column
-				print(quantile(stock_data))
-
-			elif select == 3:
-				# 2.3. Calculate Max, Min, Range (Max - min) values of data each column
-				print(range(stock_data))
-
-			elif select == 4:
-				# 2.4. Calculate Standard Deviation and Variance of data each column
-				print(standard_variation(stock_data))
-
-			elif select == 5:
-				# 2.5. Calculate Coefficient of variation of data each column
-				print(coeff_variation(stock_data))
-
-			elif select == 6:
-				# 2.6. Normalize stock prices
-				print(normalize_price_values(stock_data))
-
-			elif select == 7:
-				# 2.7. Visualize linear trend lines
-				visualize_trendline(stock_data)
-
-			elif select == 8:
-				# 2.8. Visualize candlestick chart
-				candelstick(stock_data)
-
-			elif select == 9:
-				# 2.9. Visualize Moving Average
-				ma(stock_data)
-
-			elif select == 10:
-				# 2.10. Visualize Exponential Weighted Moving Average
-				wma(stock_data)
-
-			elif select == 11:
-				# 2.11. Visualize MACD
-				macd(stock_data)
-
-			elif select == 12:
-				stock_data = gather_data()
-				select = int(select)
-
-			elif select == 13:
-
-				print("{:-^40}".format('Goodbye'))
-				break
-			else:
-				print("***Wrong choice***")
-
+	while stock_data.empty:
+		stock_data = gather_data()
 	print("There is no information on time given")
+
+	# 2. Options Selection:
+	# Users have to choose the options they want to do:
+
+	choices = ["Count", "Mean", "Quantiles", "Max, Min and Range", "Standard Deviation and Variance", "Coefficient of Variation",
+			   "Normalized Price Values", "Linear Trend Lines", "Candlestick Chart", "Moving Averages(MA)",
+			   "Exponential Weighted Moving Averages(EWMA)", "Moving Average Convergence/Divergence(MACD)",
+			   "Choose Another Stock", "Quit"]
+
+	select = ''
+
+	while select != '13':
+
+		print('/' + '{:-^60}'.format('Lists of choices') + '\\')
+
+		for i, item in enumerate(choices):
+			print_choice = '    {}. {}'.format(i, item)
+			print('|' + '{:<60}'.format(print_choice) + "|")
+		print('\\' + '-' * 60 + '/')
+
+		# Select your choice
+
+		select = input('Select your choice from the above lists (only number) :').strip()
+
+		if select == '0':
+			# 2.0. Count number of days in period
+			print(count(stock_data))
+
+		elif select == '1':
+			# 2.1. Calculate mean of data each column
+			print(mean(stock_data))
+
+		elif select == '2':
+			# 2.2. Calculate quantile of data each column
+			print(quantile(stock_data))
+
+		elif select == '3':
+			# 2.3. Calculate Max, Min, Range (Max - min) values of data each column
+			print(range(stock_data))
+
+		elif select == '4':
+			# 2.4. Calculate Standard Deviation and Variance of data each column
+			print(standard_variation(stock_data))
+
+		elif select == '5':
+			# 2.5. Calculate Coefficient of variation of data each column
+			print(coeff_variation(stock_data))
+
+		elif select == '6':
+			# 2.6. Normalize stock prices
+			print(normalize_price_values(stock_data))
+
+		elif select == '7':
+			# 2.7. Visualize linear trend lines
+			visualize_trendline(stock_data)
+
+		elif select == '8':
+			# 2.8. Visualize candlestick chart
+			candelstick(stock_data)
+
+		elif select == '9':
+			# 2.9. Visualize Moving Average
+			ma(stock_data)
+
+		elif select == '10':
+			# 2.10. Visualize Exponential Weighted Moving Average
+			wma(stock_data)
+
+		elif select == '11':
+			# 2.11. Visualize MACD
+			macd(stock_data)
+
+		elif select == '12':
+			stock_data = gather_data()
+			while stock_data.empty:
+				print("There is no information on time given")
+				stock_data = gather_data()
+
+		elif select == '13':
+
+			print("{:-^40}".format('Goodbye'))
+
+		else:
+			print("***Wrong choice***")
 
 
 if __name__ == "__main__":
