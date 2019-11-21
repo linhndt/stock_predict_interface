@@ -418,7 +418,7 @@ def predictive():
                 else:
                     print("***Wrong choice***")
 
-            input('Press \'Enter\' if you want to continue: ')
+                input('Press \'Enter\' if you want to continue: ')
 
         elif select == '3':
             stock_data = gather_data()
