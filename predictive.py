@@ -375,7 +375,7 @@ def predictive():
 
                     # 3.3.3 Options with forecasting: print out predict value, visualize, change
 
-                    forecast_choice = ["Print predict value", "Visualize predict value and training model", "Change date", "Quit"]
+                    forecast_choice = ["Print predicted value", "Visualize predicted value and training model", "Change date", "Quit"]
 
 
                     while forecast_select != '3':
